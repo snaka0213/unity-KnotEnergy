@@ -9,6 +9,8 @@ public class Main : MonoBehaviour
     private List<Vector3> _positions;
     private Curve CurrentCurve;
     private Curve NewCurve;
+    private List<Vector3> Momentum;
+    private List<Vector3> NewMomentum;
     private DrawCurve CurveObject;
     private SGD SGD;
 
@@ -121,6 +123,14 @@ public class Main : MonoBehaviour
         this.SGD = new SGD(this.lr, this.alpha);
         Debug.Log("Optimizer Ready");
 
+        Momentum = new List<Vector3>();
+
+        // initialize
+        for (int i = 0; i <= n_longitude; i++)
+        {
+            Momentum.Add(new Vector3(0, 0, 0));
+        }
+
     }
 
     void Update()
@@ -129,8 +139,9 @@ public class Main : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            NewCurve = SGD.Step(CurrentCurve);
+            (NewCurve, NewMomentum) = SGD.Step(CurrentCurve, Momentum);
             CurrentCurve = NewCurve;
+            Momentum = NewMomentum;
 
             CurveObject.UpdateMesh(CurrentCurve);
             Debug.Log("Updated Knot");

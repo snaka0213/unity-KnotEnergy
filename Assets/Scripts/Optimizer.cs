@@ -14,7 +14,7 @@ public class SGD
         this.alpha = alpha;
     }
 
-    public Curve Step(Curve curve)
+    public (Curve, List<Vector3>) Step(Curve curve, List<Vector3> momentum)
     {
         this.curve = curve;
         int N = curve.GetLength();
@@ -24,25 +24,19 @@ public class SGD
         
         Loss loss = new Loss(this.curve);
         List<Vector3> grad = loss.Gradient();
-        List<Vector3> Momentum = new List<Vector3>();
-
-        // initialize Momentum
-        for (int i = 0; i < N; i++)
-        {
-            Momentum.Add(new Vector3(0, 0, 0));
-        }
+        List<Vector3> _momentum = new List<Vector3>();
 
         // gradient descent
         for (int i = 0; i < N; i++)
         {
             Vector3 P = CurrentPositions[i];
-            Vector3 DP = -this.alpha * Momentum[i] + (1 - this.alpha) * this.lr * grad[i];
-            Momentum[i] = DP;
+            Vector3 DP = -this.alpha * momentum[i] + (1 - this.alpha) * this.lr * grad[i];
+            _momentum.Add(DP);
             NewPositions.Add(P - DP);
         }
 
         Curve _curve = new Curve(NewPositions);
-        return _curve;
+        return (_curve, _momentum);
     }
     
 }
