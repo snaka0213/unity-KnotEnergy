@@ -1,0 +1,10 @@
+{
+  "name": "com.snaka0213.knotenergy",
+  "displayName": "KnotEnergy",
+  "version": "0.0.1",
+  "unity": "2019.2",
+  "description": "HogeHoge",
+  "dependencies": {
+    
+  }
+}
